@@ -110,7 +110,7 @@ function Game() {
                                    20,
                                    canvas.width - DIMENSIONS.DOODLE_WIDTH - 20
                               ),
-                              platforms[platforms.length - 1].y,
+                              platforms[platforms.length - 1].y - 10,
                               false
                          )
                     );
@@ -122,7 +122,7 @@ function Game() {
                                    20,
                                    canvas.width - DIMENSIONS.DOODLE_WIDTH - 20
                               ),
-                              platforms[platforms.length - 1].y,
+                              platforms[platforms.length - 1].y - 10,
                               true,
                               true
                          )
