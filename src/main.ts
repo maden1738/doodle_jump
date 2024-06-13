@@ -31,6 +31,7 @@ const startGameBtn = document.getElementById(
 const gameOverAudio = document.getElementById(
      "game-over-audio"
 ) as HTMLAudioElement;
+const bounceAudio = document.getElementById("bounce-audio") as HTMLAudioElement;
 
 gameContainer.style.display = "none";
 startGameBtn.addEventListener("click", () => {
@@ -98,7 +99,9 @@ function Game() {
 
                platforms.forEach((platform) => {
                     // differentiating safe and unsafe platforms by color
-                    if (platform.safe) {
+                    if (platform.bouncy) {
+                         ctx.fillStyle = "#80ed99";
+                    } else if (platform.safe) {
                          ctx.fillStyle = "#000";
                     } else {
                          ctx.fillStyle = "#BB2124";
@@ -122,11 +125,14 @@ function Game() {
                          // player.x + player.width > platform.x && // Player's right side is right of the platform's left side
                          // player.x < platform.x + platform.width) { // Player's left side is left of the platform's right side
                     ) {
-                         if (platform.safe) {
-                              gameStarted = true;
-                              canvas.style.borderBottom = "10px solid #bb2124";
+                         if (platform.bouncy) {
+                              doodle.dy = JUMP_STRENGTH * 3;
                               doodle.y = platform.y - doodle.height;
+                         } else if (platform.safe) {
+                              canvas.style.borderBottom = "10px solid #bb2124";
+                              gameStarted = true;
                               doodle.dy = JUMP_STRENGTH;
+                              bounceAudio.play();
                          } else {
                               gameOver = true;
                          }
@@ -135,12 +141,14 @@ function Game() {
 
                // if doodle reaches centre move existing platforms down and generate new platforms
                if (doodle.dy < 0 && doodle.y < canvas.height / 2) {
+                    // move platforms down
                     platforms.forEach((platform, index) => {
                          platform.y -= doodle.dy;
                          if (platform.y > canvas.height) {
                               platforms.splice(index, 1);
                          }
                     });
+
                     if (platforms[platforms.length - 1].y > 0) {
                          // normal platforms
                          platforms.push(
@@ -155,20 +163,37 @@ function Game() {
                                         minimumSpace
                               )
                          );
-                         // bad platorms
-                         if (score && score % 10 === 0) {
-                              platforms.push(
-                                   new Platform(
-                                        getRandomArbitrary(
-                                             20,
-                                             canvas.width -
-                                                  DIMENSIONS.DOODLE_WIDTH -
-                                                  20
-                                        ),
-                                        platforms[platforms.length - 1].y,
-                                        false
-                                   )
-                              );
+                         // bad platforms
+                         if (score && score % 5 === 0) {
+                              if (Math.random() > 0.5) {
+                                   platforms.push(
+                                        new Platform(
+                                             getRandomArbitrary(
+                                                  20,
+                                                  canvas.width -
+                                                       DIMENSIONS.DOODLE_WIDTH -
+                                                       20
+                                             ),
+                                             platforms[platforms.length - 1].y,
+                                             false
+                                        )
+                                   );
+                              } else {
+                                   // bad platform
+                                   platforms.push(
+                                        new Platform(
+                                             getRandomArbitrary(
+                                                  20,
+                                                  canvas.width -
+                                                       DIMENSIONS.DOODLE_WIDTH -
+                                                       20
+                                             ),
+                                             platforms[platforms.length - 1].y,
+                                             true,
+                                             true
+                                        )
+                                   );
+                              }
                          }
                          minimumSpace = Math.min(
                               minimumSpace + 0.7,
