@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+          <meta charset="UTF-8" />
+          <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+          <meta
+               name="viewport"
+               content="width=device-width, initial-scale=1.0"
+          />
+          <title>Doodle Jump</title>
+     </head>
+     <body>
+          <audio
+               src="/src/assets/Arcade Fast Game Over.wav"
+               id="game-over-audio"
+               preload="auto"
+          ></audio>
+          <audio
+               src="/src/assets/Racquetball Bounce.mp3"
+               id="bounce-audio"
+               preload="auto"
+          ></audio>
+          <section class="start-screen">
+               <h1>DOODLE JUMP</h1>
+               <button id="start-button">Start Game</button>
+               <div class="instructions">
+                    <div>Press &leftarrow; &rightarrow; keys to navigate</div>
+                    <div>Watch out for red platforms</div>
+                    <div>Press Space to pause / unpause</div>
+               </div>
+          </section>
+          <div class="game-container">
+               <div class="score-container">
+                    <h1>Score:<span id="score"></span></h1>
+                    <h3>High-score: <span id="high-score"></span></h3>
+               </div>
+               <canvas id="gameCanvas"></canvas>
+          </div>
+          <div class="gameover-screen">
+               <h1>GAME OVER</h1>
+               <div>Your Score: <span id="final-score"></span></div>
+               <div>High Score: <span id="final-high-score"></span></div>
+               <button id="play-again">Try Again !!</button>
+          </div>
+          <script type="module" src="/src/main.ts"></script>
+     </body>
+</html>

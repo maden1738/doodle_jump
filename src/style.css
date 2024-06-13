@@ -1,0 +1,101 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+body {
+     font-family: "Press Start 2P", system-ui;
+     margin: 0;
+     padding: 0;
+     background: url("assets/doodleb.jpeg") no-repeat;
+     background-size: cover;
+     height: 100vh;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     position: relative;
+}
+
+h1,
+h2,
+h3 {
+     margin: 0;
+}
+
+.start-screen {
+     background-color: #22577a;
+     color: #ffd60a;
+     width: fit-content;
+     padding: 50px;
+     border-radius: 20px;
+}
+
+.game-container {
+     height: 100vh;
+     width: 100%;
+     align-items: center;
+     display: flex;
+     justify-content: center;
+     flex-direction: column;
+}
+
+.score-container {
+     margin: 0;
+     padding: 10px 20px;
+     border-radius: 10px;
+     color: #ffd60a;
+     background-color: #22577a;
+     text-align: center;
+}
+
+.score-container > h3 {
+     color: white;
+     padding-top: 0.5rem;
+}
+
+button {
+     border: none;
+     padding: 10px 20px;
+     border-radius: 10px;
+     font-family: "Press Start 2P", system-ui;
+     cursor: pointer;
+     margin-top: 1rem;
+}
+
+#gameCanvas {
+     border: 2px solid #22577a;
+}
+
+.gameover-screen {
+     display: none;
+     background-color: #22577a;
+     padding: 20px;
+     text-align: center;
+     border-radius: 20px;
+     position: absolute;
+}
+
+#final-score,
+#final-high-score {
+     color: #ffd60a;
+}
+
+.gameover-screen > h1 {
+     color: #ffd60a;
+     margin-bottom: 1rem;
+}
+
+.gameover-screen > div {
+     padding: 0.5rem;
+}
+
+.gameover-screen > button {
+     margin-top: 10px;
+}
+
+.instructions {
+     margin-top: 1rem;
+     color: white;
+     font-size: 14px;
+}
+
+.instructions div {
+     padding-top: 0.5rem;
+}
