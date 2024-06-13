@@ -1,7 +1,7 @@
 import "./style.css";
 import { Sprite } from "./models/Sprite";
 import doodleSprite from "./assets/doodle.png";
-import { DIMENSIONS } from "./constants";
+import { DIMENSIONS, DISPLACEMENT } from "./constants";
 import { Platform } from "./models/Platform";
 import getRandomArbitrary from "./utils/randomNumberGenerator";
 
@@ -13,8 +13,6 @@ canvas.height = 700;
 
 let highScore = parseInt(localStorage.getItem("high-score") || "0");
 
-const GRAVITY = 0.5;
-const JUMP_STRENGTH = -15;
 let minimumSpace = 50;
 let score = 0;
 let gameStarted = false;
@@ -58,6 +56,7 @@ function Game() {
           platforms.push(new Platform(x, y));
      }
 
+     // initlaize doodle
      const doodle = new Sprite(
           doodleSprite,
           canvas.width / 2 - DIMENSIONS.DOODLE_WIDTH / 2,
@@ -91,6 +90,47 @@ function Game() {
           });
      }
 
+     function generateNewPlatform() {
+          // normal platform
+          platforms.push(
+               new Platform(
+                    getRandomArbitrary(
+                         20,
+                         canvas.width - DIMENSIONS.DOODLE_WIDTH - 20
+                    ),
+                    platforms[platforms.length - 1].y - minimumSpace
+               )
+          );
+          // bad platforms
+          if (score && score % 5 === 0) {
+               if (Math.random() > 0.5) {
+                    platforms.push(
+                         new Platform(
+                              getRandomArbitrary(
+                                   20,
+                                   canvas.width - DIMENSIONS.DOODLE_WIDTH - 20
+                              ),
+                              platforms[platforms.length - 1].y,
+                              false
+                         )
+                    );
+               } else {
+                    // bouncy platform
+                    platforms.push(
+                         new Platform(
+                              getRandomArbitrary(
+                                   20,
+                                   canvas.width - DIMENSIONS.DOODLE_WIDTH - 20
+                              ),
+                              platforms[platforms.length - 1].y,
+                              true,
+                              true
+                         )
+                    );
+               }
+          }
+     }
+
      function draw() {
           if (!isPaused) {
                ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -120,18 +160,14 @@ function Game() {
                          doodle.x + doodle.width > platform.x &&
                          doodle.y < platform.y + platform.height &&
                          doodle.y + doodle.height > platform.y
-                         //   player.y + player.height > platform.y && // Player's feet are below the top of the platform
-                         // player.y + player.height < platform.y + platform.height && // Player's feet are above the bottom of the platform
-                         // player.x + player.width > platform.x && // Player's right side is right of the platform's left side
-                         // player.x < platform.x + platform.width) { // Player's left side is left of the platform's right side
                     ) {
                          if (platform.bouncy) {
-                              doodle.dy = JUMP_STRENGTH * 3;
+                              doodle.dy = DISPLACEMENT.JUMP_STRENGTH * 3;
                               doodle.y = platform.y - doodle.height;
                          } else if (platform.safe) {
                               canvas.style.borderBottom = "10px solid #bb2124";
                               gameStarted = true;
-                              doodle.dy = JUMP_STRENGTH;
+                              doodle.dy = DISPLACEMENT.JUMP_STRENGTH;
                               bounceAudio.play();
                          } else {
                               gameOver = true;
@@ -150,57 +186,11 @@ function Game() {
                     });
 
                     if (platforms[platforms.length - 1].y > 0) {
-                         // normal platforms
-                         platforms.push(
-                              new Platform(
-                                   getRandomArbitrary(
-                                        20,
-                                        canvas.width -
-                                             DIMENSIONS.DOODLE_WIDTH -
-                                             20
-                                   ),
-                                   platforms[platforms.length - 1].y -
-                                        minimumSpace
-                              )
-                         );
-                         // bad platforms
-                         if (score && score % 5 === 0) {
-                              if (Math.random() > 0.5) {
-                                   platforms.push(
-                                        new Platform(
-                                             getRandomArbitrary(
-                                                  20,
-                                                  canvas.width -
-                                                       DIMENSIONS.DOODLE_WIDTH -
-                                                       20
-                                             ),
-                                             platforms[platforms.length - 1].y,
-                                             false
-                                        )
-                                   );
-                              } else {
-                                   // bad platform
-                                   platforms.push(
-                                        new Platform(
-                                             getRandomArbitrary(
-                                                  20,
-                                                  canvas.width -
-                                                       DIMENSIONS.DOODLE_WIDTH -
-                                                       20
-                                             ),
-                                             platforms[platforms.length - 1].y,
-                                             true,
-                                             true
-                                        )
-                                   );
-                              }
-                         }
+                         generateNewPlatform();
                          minimumSpace = Math.min(
                               minimumSpace + 0.7,
                               DIMENSIONS.MAX_SEPARATION_SPACE
                          );
-                         console.log(minimumSpace);
-
                          score++;
                          scoreSpan.innerHTML = String(score);
                     }
@@ -216,7 +206,7 @@ function Game() {
                     doodle.width,
                     doodle.height
                );
-               doodle.dy += GRAVITY; // gravity
+               doodle.dy += DISPLACEMENT.GRAVITY; // gravity
                doodle.x += doodle.dx;
 
                if (doodle.y < maxHeight) {
@@ -226,7 +216,7 @@ function Game() {
                // initial bounce
                if (doodle.y + doodle.height > canvas.height) {
                     doodle.y = canvas.height - doodle.height;
-                    doodle.dy = JUMP_STRENGTH;
+                    doodle.dy = DISPLACEMENT.JUMP_STRENGTH;
                     if (gameStarted) {
                          gameOver = true;
                     }

@@ -5,3 +5,8 @@ export const DIMENSIONS = {
      DOODLE_HEIGHT: 70,
      MAX_SEPARATION_SPACE: 115,
 };
+
+export const DISPLACEMENT = {
+     GRAVITY: 0.5,
+     JUMP_STRENGTH: -15,
+};
